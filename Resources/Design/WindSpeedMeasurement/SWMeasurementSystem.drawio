@@ -1,0 +1,45 @@
+<mxfile host="65bd71144e">
+    <diagram id="DPp25TC4-czPRtRmui-f" name="Page-1">
+        <mxGraphModel dx="1130" dy="780" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Legend" style="swimlane;whiteSpace=wrap;html=1;fontSize=20;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="20" width="200" height="500" as="geometry">
+                        <mxRectangle x="30" y="20" width="110" height="40" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="3" value="&lt;font style=&quot;font-size: 17px;&quot;&gt;Normal execution path&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=20;fillColor=#008a00;fontColor=#ffffff;strokeColor=#005700;" parent="2" vertex="1">
+                    <mxGeometry x="20" y="40" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="&lt;font style=&quot;font-size: 17px;&quot;&gt;Error handling path&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=20;fillColor=#e3c800;fontColor=#000000;strokeColor=#B09500;" parent="2" vertex="1">
+                    <mxGeometry x="20" y="110" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="&lt;font style=&quot;font-size: 17px;&quot;&gt;System Failure path&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=20;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="2" vertex="1">
+                    <mxGeometry x="20" y="180" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="&lt;font style=&quot;font-size: 17px;&quot;&gt;Decision&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=20;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" parent="2" vertex="1">
+                    <mxGeometry x="20" y="250" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="&lt;font style=&quot;font-size: 17px;&quot;&gt;Debug command interface tasks&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=20;fillColor=#f0a30a;fontColor=#000000;strokeColor=#BD7000;" parent="2" vertex="1">
+                    <mxGeometry x="20" y="320" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="&lt;ul&gt;&lt;li&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;ANM - Anemometer probe&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;THM - Thermometer probe&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;" parent="2" vertex="1">
+                    <mxGeometry x="-10" y="393.5" width="210" height="96.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Cunter ISR&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="230" width="200" height="310" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Read ticks between falling edges of input signal.&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=20;fillColor=#008a00;fontColor=#ffffff;strokeColor=#005700;" parent="12" vertex="1">
+                    <mxGeometry x="20" y="30" width="170" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="Sa" style="whiteSpace=wrap;html=1;fontSize=20;fillColor=#008a00;strokeColor=#005700;fontColor=#ffffff;rounded=1;" parent="12" vertex="1">
+                    <mxGeometry x="45" y="140" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="12" source="9" target="10" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

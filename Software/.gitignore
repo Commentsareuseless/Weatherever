@@ -1,0 +1,5 @@
+# Ignore compile_commands, which is generated for editor
+compile_commands.json
+
+# Test reports from CTest
+Testing

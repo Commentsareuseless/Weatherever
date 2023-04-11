@@ -1,0 +1,5 @@
+- H11L3M - Optoisolator
+- ATSAMD10D13A-M - MCU
+- CC110LRGPR - RF Transiver
+- AOZ1280CI - Buck converter
+- 74HC590D - 8b counter
