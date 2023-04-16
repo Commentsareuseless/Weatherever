@@ -332,6 +332,10 @@
     [
       "ea8973fb-cc5b-406e-a96d-4896534ade78",
       "RadioComm"
+    ],
+    [
+      "7c3e3c79-57cf-42ee-9db4-63e2490a064e",
+      "OnBoardThermometer"
     ]
   ],
   "text_variables": {}

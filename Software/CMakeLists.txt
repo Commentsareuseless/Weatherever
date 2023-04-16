@@ -31,20 +31,26 @@ option(UPDATE_SUBMODULES
 
 # ##############################################################################
 
-# C99 Support
+# C11 Support
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
-# Report used C standard
+# C++17 Support
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Report used C and C++ standard
 message(STATUS "Using C${CMAKE_C_STANDARD} standard")
+message(STATUS "Using C++${CMAKE_CXX_STANDARD} standard")
 
 # Check if project submodules are up to date
 find_package(Git REQUIRED)
 if(GIT_FOUND AND EXISTS "${CMAKE_CURRENT_LIST_DIR}/../.git")
   # Update submodules as needed
   message(STATUS "Found git, submodule update possible")
-  if(UPDATE_SUBMODULES)
+  if(UPDATE_SUBMODULES EQUAL ON)
     message(STATUS "Submodule update")
     execute_process(
       COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
@@ -59,12 +65,11 @@ if(GIT_FOUND AND EXISTS "${CMAKE_CURRENT_LIST_DIR}/../.git")
   endif()
 endif()
 
+# Make 10000% sure that git ignores binary directory
+file(WRITE ${CMAKE_BINARY_DIR}/../.gitignore "# Ignore everything inside this directory\n")
+file(APPEND ${CMAKE_BINARY_DIR}/../.gitignore "./*")
+
 # Pre project includes
-if(${CMAKE_BUILD_TYPE} STREQUAL "Test")
-  # include(CTest)
-else()
-  include(ext/pico-sdk/pico_sdk_init.cmake)
-endif()
 
 # ##############################################################################
 # Pre-project configuration end
@@ -72,14 +77,12 @@ endif()
 
 project(
   Weatherever
-  LANGUAGES C
+  LANGUAGES C CXX
   DESCRIPTION "Remote weather station with anemometer")
 
 # Include later used modules
 if(${CMAKE_BUILD_TYPE} STREQUAL "Test")
   include(CTest)
-  add_subdirectory(${CMAKE_SOURCE_DIR}/ext/unity)
-  add_subdirectory(${CMAKE_SOURCE_DIR}/test)
 else()
-  pico_sdk_init()
+#   pico_sdk_init()
 endif()

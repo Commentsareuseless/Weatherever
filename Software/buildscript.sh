@@ -13,40 +13,17 @@ BUILD_GENERATOR="Ninja"
 # Helper functions
 ################################################################################
 
-create_gitignore() {
-  # Create .gitignore inside build directory
-  echo '# Ignore everything inside this directory' > $BUILD_DIR/.gitignore
-  echo './*' >> $BUILD_DIR/.gitignore
-}
-
-create_dir_structure() {
-  # Make sure build directory exists
-  if [ ! -d $BUILD_DIR ]; then
-    mkdir $BUILD_DIR
-  fi
-
-  # Create build directory structure if necessary
-  if [ ! -d $BUILD_NATIVE ]; then
-    mkdir -p $BUILD_NATIVE
-  fi
-
-  if [ ! -d $BUILD_TARGET ]; then
-    mkdir -p $BUILD_TARGET
-  fi
-
-  # Make sure .gitignore is inside build directory
-  if [ ! -f $BUILD_DIR/.gitignore ]; then
-    create_gitignore
-  fi
-}
+# create_gitignore() {
+#   # Create .gitignore inside build directory
+#   echo '# Ignore everything inside this directory' > $BUILD_DIR/.gitignore
+#   echo './*' >> $BUILD_DIR/.gitignore
+# }
 
 only_build_project() {
   cmake --build $BUILD_TARGET --config $BUILD_TYPE_SEL -j `nproc`
 }
 
 build_and_cfg_project() {
-  create_dir_structure
-
   cmake -G $BUILD_GENERATOR -B $BUILD_TARGET -S . -DCMAKE_BUILD_TYPE=$BUILD_TYPE_SEL -DUPDATE_SUBMODULES=ON
   only_build_project
 }
@@ -56,8 +33,6 @@ build_test() {
 }
 
 cfg_and_build_test() {
-  create_dir_structure
-
   cmake -G $BUILD_GENERATOR -B $BUILD_NATIVE -S . -DCMAKE_BUILD_TYPE=$BUILD_TYPE_SEL -DUPDATE_SUBMODULES=ON
   build_test 
 }
@@ -115,4 +90,3 @@ else
     echo "test-run      - Only run tests"
     echo "cfg           - First time configure and build"
 fi
-
