@@ -13,12 +13,6 @@ BUILD_GENERATOR="Ninja"
 # Helper functions
 ################################################################################
 
-# create_gitignore() {
-#   # Create .gitignore inside build directory
-#   echo '# Ignore everything inside this directory' > $BUILD_DIR/.gitignore
-#   echo './*' >> $BUILD_DIR/.gitignore
-# }
-
 only_build_project() {
   cmake --build $BUILD_TARGET --config $BUILD_TYPE_SEL -j `nproc`
 }
@@ -34,7 +28,7 @@ build_test() {
 
 cfg_and_build_test() {
   cmake -G $BUILD_GENERATOR -B $BUILD_NATIVE -S . -DCMAKE_BUILD_TYPE=$BUILD_TYPE_SEL -DUPDATE_SUBMODULES=ON
-  build_test 
+  build_test
 }
 
 run_tests() {
@@ -46,9 +40,9 @@ cleanup() {
   cmake --build $BUILD_TARGET --target clean
 }
 
-move_compile_cmds() {
-  mv -f $1/compile_commands.json .
-}
+# move_compile_cmds() {
+#   mv -f $1/compile_commands.json .
+# }
 
 ################################################################################
 # Handle user input
@@ -66,7 +60,7 @@ elif [ $1 == "cfg" ]; then
   # Build with configure
   BUILD_TYPE_SEL=$BUILD_TYPE_DBG
   build_and_cfg_project
-  move_compile_cmds $BUILD_TARGET
+#   move_compile_cmds $BUILD_TARGET
 
 elif [ $1 == "ncfg" ]; then
   # Build without config step
@@ -75,7 +69,7 @@ elif [ $1 == "ncfg" ]; then
 elif [ $1 == "test-cfg" ]; then
   BUILD_TYPE_SEL=$BUILD_TYPE_TEST
   cfg_and_build_test
-  move_compile_cmds $BUILD_NATIVE
+#   move_compile_cmds $BUILD_NATIVE
 
 elif [ $1 == "test-run" ]; then
   run_tests

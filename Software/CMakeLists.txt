@@ -11,15 +11,6 @@ cmake_minimum_required(VERSION 3.21)
 # Pre-project configuration
 # ##############################################################################
 
-# Those are the configuration defaults. Once the values are specified using
-# -D... directive, it is being set in cache. The statements below just take
-# effect once there is no entry of such variable in the cache (given by -D
-# directive). So effectively, the values below are used only if not set "from
-# outside"
-
-# set(CMAKE_TARGET_PROCESSOR "x86_64" CACHE STRING "Target processor")
-# message(STATUS "Target processor is ${CMAKE_TARGET_PROCESSOR}")
-
 # Export compile_commands.json for editors which use them
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -45,6 +36,59 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 message(STATUS "Using C${CMAKE_C_STANDARD} standard")
 message(STATUS "Using C++${CMAKE_CXX_STANDARD} standard")
 
+if(${CMAKE_BUILD_TYPE} NOT STREQUAL "Test")
+  # Make sure this script will work on Windows
+  if(WIN32)
+    set(TOOLCHAIN_EXT ".exe")
+  else()
+    set(TOOLCHAIN_EXT "")
+  endif(WIN32)
+
+  # Set common variables for cross compilation
+  set(TARGET_TRIPLET "arm-none-eabi-")
+  set(CMAKE_SYSTEM_NAME Generic)
+  set(CMAKE_SYSTEM_PROCESSOR arm)
+  set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+
+  # Use apropriate compilers and utilis
+  set(CMAKE_C_COMPILER   ${TARGET_TRIPLET}gcc${TOOLCHAIN_EXT})
+  set(CMAKE_CXX_COMPILER ${TARGET_TRIPLET}g++${TOOLCHAIN_EXT})
+  set(CMAKE_ASM_COMPILER ${TARGET_TRIPLET}gcc${TOOLCHAIN_EXT})
+  set(CMAKE_LINKER       ${TARGET_TRIPLET}gcc${TOOLCHAIN_EXT})
+  set(CMAKE_SIZE_UTIL    ${TARGET_TRIPLET}size${TOOLCHAIN_EXT})
+  set(CMAKE_OBJCOPY      ${TARGET_TRIPLET}objcopy${TOOLCHAIN_EXT})
+  set(CMAKE_OBJDUMP      ${TARGET_TRIPLET}objdump${TOOLCHAIN_EXT})
+  set(CMAKE_NM_UTIL      ${TARGET_TRIPLET}gcc-nm${TOOLCHAIN_EXT})
+  set(CMAKE_AR           ${TARGET_TRIPLET}gcc-ar${TOOLCHAIN_EXT})
+  set(CMAKE_RANLIB       ${TARGET_TRIPLET}gcc-ranlib${TOOLCHAIN_EXT})
+
+  # Define target processor
+  set(MCU_TYPE "-mcpu=cortex-m0plus")
+  set(MCPU_FLAGS "-mthumb ${MCU_TYPE}")
+
+  # Compiler and linker flags
+  set(LDSCRIPT STM32G030C8Tx_FLASH.ld)
+  set(LIBS -lc -lm -lnosys)
+  set(LD_FLAGS ${MCU_TYPE} -specs=nano.specs -T${LDSCRIPT} ${LIBS} -Wl,-Map=${CMAKE_BINARY_DIR}/${PROJECT_NAME}.map,--cref -Wl,--gc-sections)
+  set(CMAKE_COMMON_FLAGS -ffunction-sections -fdata-sections -fno-builtin -fno-common -Wall -Wshadow -Wdouble-promotion -Werror)
+
+  set(CMAKE_C_FLAGS ${MCPU_FLAGS} ${CMAKE_COMMON_FLAGS})
+  set(CMAKE_CXX_FLAGS ${MCPU_FLAGS} ${CMAKE_COMMON_FLAGS})
+  set(CMAKE_ASM_FLAGS ${MCPU_FLAGS} ${CMAKE_COMMON_FLAGS})
+  set(CMAKE_EXE_LINKER_FLAGS ${LD_FLAGS},-print-memory-usage)
+
+  set(CMAKE_C_FLAGS_DEBUG "-O0 -g -gdwarf-2")
+  set(CMAKE_CXX_ASM_FLAGS_DEBUG "-O0 -g -gdwarf-2")
+  set(CMAKE_ASM_FLAGS_DEBUG "")
+  set(CMAKE_EXE_LINKER_FLAGS_DEBUG "")
+
+  set(CMAKE_C_FLAGS_RELEASE "-Os -flto")
+  set(CMAKE_CXX_FLAGS_RELEASE "-Os -flto")
+  set(CMAKE_ASM_FLAGS_RELEASE "")
+  set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-flto")
+
+endif()
+
 # Check if project submodules are up to date
 find_package(Git REQUIRED)
 if(GIT_FOUND AND EXISTS "${CMAKE_CURRENT_LIST_DIR}/../.git")
@@ -69,7 +113,22 @@ endif()
 file(WRITE ${CMAKE_BINARY_DIR}/../.gitignore "# Ignore everything inside this directory\n")
 file(APPEND ${CMAKE_BINARY_DIR}/../.gitignore "./*")
 
-# Pre project includes
+# Move configuration from MX Cube to main project directory
+set(PRJ_SETUP_DIR ${CMAKE_SOURCE_DIR}/setup/WeathereverSTM)
+file(
+  INSTALL ${PRJ_SETUP_DIR}/Core/
+  DESTINATION ${CMAKE_SOURCE_DIR}/core
+)
+
+file(
+  INSTALL ${PRJ_SETUP_DIR}/Drivers/
+  DESTINATION ${CMAKE_SOURCE_DIR}/cdrv
+)
+
+file(
+  INSTALL ${PRJ_SETUP_DIR}/Middlewares/Third_Party/FreeRTOS/Source/
+  DESTINATION ${CMAKE_SOURCE_DIR}/rtos
+)
 
 # ##############################################################################
 # Pre-project configuration end
@@ -78,11 +137,35 @@ file(APPEND ${CMAKE_BINARY_DIR}/../.gitignore "./*")
 project(
   Weatherever
   LANGUAGES C CXX
-  DESCRIPTION "Remote weather station with anemometer")
+  DESCRIPTION "Remote weather station with anemometer"
+)
+
+# Move compile_commands.json to main directory for editors which use them
+add_custom_command(TARGET ${PROJECT_NAME}
+  POST_BUILD
+  COMMAND
+    ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_BINARY_DIR}/compile_commands.json
+    ${CMAKE_SOURCE_DIR}/
+)
 
 # Include later used modules
 if(${CMAKE_BUILD_TYPE} STREQUAL "Test")
   include(CTest)
+
+  # CppUTest
+  include(FetchContent)
+  FetchContent_Declare(
+    CppUTest
+    GIT_REPOSITORY https://github.com/cpputest/cpputest.git
+    GIT_TAG        master
+  )
+
+  # Set this to ON if you want to have the CppUTests in your project as well.
+  set(TESTS OFF CACHE BOOL "Switch off CppUTest Test build")
+  FetchContent_MakeAvailable(CppUTest)
+
+  add_subdirectory(${CMAKE_SOURCE_DIR}/test)
 else()
 #   pico_sdk_init()
 endif()
