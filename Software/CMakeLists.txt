@@ -36,7 +36,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 message(STATUS "Using C${CMAKE_C_STANDARD} standard")
 message(STATUS "Using C++${CMAKE_CXX_STANDARD} standard")
 
-if(${CMAKE_BUILD_TYPE} NOT STREQUAL "Test")
+if(NOT (${CMAKE_BUILD_TYPE} STREQUAL "Test"))
   # Make sure this script will work on Windows
   if(WIN32)
     set(TOOLCHAIN_EXT ".exe")
@@ -87,6 +87,11 @@ if(${CMAKE_BUILD_TYPE} NOT STREQUAL "Test")
   set(CMAKE_ASM_FLAGS_RELEASE "")
   set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-flto")
 
+  # Move configuration from MX Cube to main project directory
+  set(PRJ_SETUP_DIR ${CMAKE_SOURCE_DIR}/setup/WeathereverSTM)
+  file(INSTALL ${PRJ_SETUP_DIR}/Core/ DESTINATION ${CMAKE_SOURCE_DIR}/core)
+  file(INSTALL ${PRJ_SETUP_DIR}/Drivers/ DESTINATION ${CMAKE_SOURCE_DIR}/cdrv)
+  file(INSTALL ${PRJ_SETUP_DIR}/Middlewares/Third_Party/FreeRTOS/Source/ DESTINATION ${CMAKE_SOURCE_DIR}/rtos)
 endif()
 
 # Check if project submodules are up to date
@@ -113,22 +118,7 @@ endif()
 file(WRITE ${CMAKE_BINARY_DIR}/../.gitignore "# Ignore everything inside this directory\n")
 file(APPEND ${CMAKE_BINARY_DIR}/../.gitignore "./*")
 
-# Move configuration from MX Cube to main project directory
-set(PRJ_SETUP_DIR ${CMAKE_SOURCE_DIR}/setup/WeathereverSTM)
-file(
-  INSTALL ${PRJ_SETUP_DIR}/Core/
-  DESTINATION ${CMAKE_SOURCE_DIR}/core
-)
 
-file(
-  INSTALL ${PRJ_SETUP_DIR}/Drivers/
-  DESTINATION ${CMAKE_SOURCE_DIR}/cdrv
-)
-
-file(
-  INSTALL ${PRJ_SETUP_DIR}/Middlewares/Third_Party/FreeRTOS/Source/
-  DESTINATION ${CMAKE_SOURCE_DIR}/rtos
-)
 
 # ##############################################################################
 # Pre-project configuration end
@@ -140,32 +130,32 @@ project(
   DESCRIPTION "Remote weather station with anemometer"
 )
 
-# Move compile_commands.json to main directory for editors which use them
-add_custom_command(TARGET ${PROJECT_NAME}
-  POST_BUILD
-  COMMAND
-    ${CMAKE_COMMAND} -E copy_if_different
-    ${CMAKE_BINARY_DIR}/compile_commands.json
-    ${CMAKE_SOURCE_DIR}/
-)
-
 # Include later used modules
 if(${CMAKE_BUILD_TYPE} STREQUAL "Test")
   include(CTest)
+  include(FetchContent)
 
   # CppUTest
-  include(FetchContent)
+  set(TEST_FRAMEWORK_DIR ${CMAKE_SOURCE_DIR}/test/CppUTest)
+
   FetchContent_Declare(
     CppUTest
     GIT_REPOSITORY https://github.com/cpputest/cpputest.git
     GIT_TAG        master
   )
-
-  # Set this to ON if you want to have the CppUTests in your project as well.
-  set(TESTS OFF CACHE BOOL "Switch off CppUTest Test build")
   FetchContent_MakeAvailable(CppUTest)
 
   add_subdirectory(${CMAKE_SOURCE_DIR}/test)
+
+  # Move compile_commands.json to main directory for editors which use them
+  add_custom_command(
+    OUTPUT ${CMAKE_SOURCE_DIR}/compile_commands.json
+    POST_BUILD
+    COMMAND
+      ${CMAKE_COMMAND} -E copy_if_different
+      ${CMAKE_BINARY_DIR}/compile_commands.json
+      ${CMAKE_SOURCE_DIR}/
+  )
 else()
 #   pico_sdk_init()
 endif()

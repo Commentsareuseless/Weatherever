@@ -1,13 +1,13 @@
 # Configuration file for example unit test
 
 # Specify sources without .c postfix
-set(TEST_SOURCES "TestExample" "TestThisShouldFail")
+set(TEST_SOURCES "TestExample")
 
 # Specify libraries to link with test
 set(TEST_LIBS)
 
 # Specify include directories
-set(TEST_DIRS ${CMAKE_SOURCE_DIR}/ext/fff/)
+set(TEST_DIRS)
 
 register_testcase(
   TC_LIST
