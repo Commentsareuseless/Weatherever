@@ -147,15 +147,21 @@ if(${CMAKE_BUILD_TYPE} STREQUAL "Test")
 
   add_subdirectory(${CMAKE_SOURCE_DIR}/test)
 
-  # Move compile_commands.json to main directory for editors which use them
-  add_custom_command(
-    OUTPUT ${CMAKE_SOURCE_DIR}/compile_commands.json
-    POST_BUILD
-    COMMAND
-      ${CMAKE_COMMAND} -E copy_if_different
-      ${CMAKE_BINARY_DIR}/compile_commands.json
-      ${CMAKE_SOURCE_DIR}/
-  )
-else()
-#   pico_sdk_init()
+  else()
+  #   pico_sdk_init()
 endif()
+
+# Move compile_commands.json to main directory for editors which use them
+add_custom_command(
+  OUTPUT ${CMAKE_SOURCE_DIR}/compile_commands.json
+  POST_BUILD
+  COMMAND
+  ${CMAKE_COMMAND} -E copy_if_different
+  ${CMAKE_BINARY_DIR}/compile_commands.json
+  ${CMAKE_SOURCE_DIR}/
+)
+
+add_custom_target(
+  CompileCmds ALL
+  DEPENDS ${CMAKE_SOURCE_DIR}/compile_commands.json
+)
