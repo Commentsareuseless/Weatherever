@@ -22,6 +22,13 @@ option(UPDATE_SUBMODULES
 
 # ##############################################################################
 
+# Convenience, not to copy-paste this in different generated dirs
+function(gen_gitignore DIR)
+  file(WRITE ${DIR}/.gitignore "# Ignore everything inside this directory\n")
+  file(APPEND ${DIR}/.gitignore "./*")
+endfunction(gen_gitignore DIR)
+
+
 # C11 Support
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -89,9 +96,26 @@ if(NOT (${CMAKE_BUILD_TYPE} STREQUAL "Test"))
 
   # Move configuration from MX Cube to main project directory
   set(PRJ_SETUP_DIR ${CMAKE_SOURCE_DIR}/setup/WeathereverSTM)
-  file(INSTALL ${PRJ_SETUP_DIR}/Core/ DESTINATION ${CMAKE_SOURCE_DIR}/core)
-  file(INSTALL ${PRJ_SETUP_DIR}/Drivers/ DESTINATION ${CMAKE_SOURCE_DIR}/cdrv)
-  file(INSTALL ${PRJ_SETUP_DIR}/Middlewares/Third_Party/FreeRTOS/Source/ DESTINATION ${CMAKE_SOURCE_DIR}/rtos)
+  # Base generated project files
+  file(INSTALL ${PRJ_SETUP_DIR}/Core/Inc DESTINATION ${CMAKE_SOURCE_DIR}/core/gen )
+  file(INSTALL ${PRJ_SETUP_DIR}/Core/Src DESTINATION ${CMAKE_SOURCE_DIR}/core/gen )
+  # Core drivers for MCU
+  file(INSTALL ${PRJ_SETUP_DIR}/Drivers/ DESTINATION ${CMAKE_SOURCE_DIR}/cdrv )
+  # FreeRTOS files
+  file(INSTALL ${PRJ_SETUP_DIR}/Middlewares/Third_Party/FreeRTOS/Source/ DESTINATION ${CMAKE_SOURCE_DIR}/rtos )
+  # Linker script for STM32G030C8T
+  file(INSTALL ${PRJ_SETUP_DIR}/STM32G030C8Tx_FLASH.ld DESTINATION ${CMAKE_SOURCE_DIR} )
+  # Microcontroler startup code
+  file(INSTALL ${PRJ_SETUP_DIR}/startup_stm32g030xx.s DESTINATION ${CMAKE_SOURCE_DIR} )
+  # Since there quite a lot of files in setup dir, we don't want to make unneccessary copies
+  # Leave only CubeMX project files
+#   file(REMOVE_RECURSE ${PRJ_SETUP_DIR}/Core ${PRJ_SETUP_DIR}/Drivers ${PRJ_SETUP_DIR}/Middlewares)
+#   file(REMOVE
+#     ${PRJ_SETUP_DIR}/startup_stm32g030xx.s
+#     ${PRJ_SETUP_DIR}/STM32G030C8Tx_FLASH.ld
+#     ${PRJ_SETUP_DIR}/STM32G030K8Tx_FLASH.ld
+#     ${PRJ_SETUP_DIR}/Makefile
+#   )
 endif()
 
 # Check if project submodules are up to date
@@ -117,8 +141,6 @@ endif()
 # Make 10000% sure that git ignores binary directory
 file(WRITE ${CMAKE_BINARY_DIR}/../.gitignore "# Ignore everything inside this directory\n")
 file(APPEND ${CMAKE_BINARY_DIR}/../.gitignore "./*")
-
-
 
 # ##############################################################################
 # Pre-project configuration end
