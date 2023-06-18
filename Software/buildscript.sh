@@ -1,12 +1,14 @@
 #!/bin/bash
+(
+
+set -e   # Stop execution when error occurs
 
 BUILD_DIR='build'
-BUILD_NATIVE=$BUILD_DIR/native
-BUILD_TARGET=$BUILD_DIR/target
+BUILD_NATIVE=$BUILD_DIR/native  # The Debug and test config
+BUILD_TARGET=$BUILD_DIR/target  # The Release and HW test config
 BUILD_TYPE_DBG="Debug"
 BUILD_TYPE_REL="Release"
-BUILD_TYPE_TEST="Test"
-BUILD_TYPE_SEL="$BUILD_TYPE_TEST"
+BUILD_TYPE_SEL="$BUILD_TYPE_DBG"
 BUILD_GENERATOR="Ninja"
 
 ################################################################################
@@ -18,7 +20,7 @@ only_build_project() {
 }
 
 build_and_cfg_project() {
-  cmake -G $BUILD_GENERATOR -B $BUILD_TARGET -S . -DCMAKE_BUILD_TYPE=$BUILD_TYPE_SEL -DUPDATE_SUBMODULES=ON
+  cmake -G $BUILD_GENERATOR -B $BUILD_TARGET -S . -DCMAKE_BUILD_TYPE=$BUILD_TYPE_SEL -DUPDATE_SUBMODULES=ON -DBUILD_TEST=OFF
   only_build_project
 }
 
@@ -27,7 +29,7 @@ build_test() {
 }
 
 cfg_and_build_test() {
-  cmake -G $BUILD_GENERATOR -B $BUILD_NATIVE -S . -DCMAKE_BUILD_TYPE=$BUILD_TYPE_SEL -DUPDATE_SUBMODULES=ON
+  cmake -G $BUILD_GENERATOR -B $BUILD_NATIVE -S . -DCMAKE_BUILD_TYPE=$BUILD_TYPE_SEL -DUPDATE_SUBMODULES=ON -DBUILD_TEST=ON
   build_test
 }
 
@@ -40,17 +42,13 @@ cleanup() {
   cmake --build $BUILD_TARGET --target clean
 }
 
-# move_compile_cmds() {
-#   mv -f $1/compile_commands.json .
-# }
-
 ################################################################################
 # Handle user input
 ################################################################################
 
 if [ $# == 0 ]; then
   # If no arguments passed, just build tests
-  BUILD_TYPE_SEL=$BUILD_TYPE_TEST
+  BUILD_TYPE_SEL=$BUILD_TYPE_DBG
   build_test
 
 elif [ $1 == "clean" ]; then
@@ -58,18 +56,16 @@ elif [ $1 == "clean" ]; then
 
 elif [ $1 == "cfg" ]; then
   # Build with configure
-  BUILD_TYPE_SEL=$BUILD_TYPE_DBG
+  BUILD_TYPE_SEL=$BUILD_TYPE_REL
   build_and_cfg_project
-#   move_compile_cmds $BUILD_TARGET
 
 elif [ $1 == "ncfg" ]; then
   # Build without config step
   only_build_project
 
 elif [ $1 == "test-cfg" ]; then
-  BUILD_TYPE_SEL=$BUILD_TYPE_TEST
+  BUILD_TYPE_SEL=$BUILD_TYPE_DBG
   cfg_and_build_test
-#   move_compile_cmds $BUILD_NATIVE
 
 elif [ $1 == "test-run" ]; then
   run_tests
@@ -83,4 +79,8 @@ else
     echo "test-cfg      - Configure and build tests"
     echo "test-run      - Only run tests"
     echo "cfg           - First time configure and build"
+    echo "ncfg          - Just build project for target"
+    echo "clean         - Clean build directories"
+    echo "prg           - Inactive, WIP" # Build for target and program device
 fi
+)
