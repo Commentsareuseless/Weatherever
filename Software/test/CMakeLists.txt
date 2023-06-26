@@ -9,17 +9,18 @@ macro(register_testcase)
   cmake_parse_arguments(ARG "${option_args}" "${one_val_args}"
                         "${multi_val_args}" ${ARGN})
 
+  include(GoogleTest)
+
   foreach(test ${ARG_TC_LIST})
     message("Created test " ${test})
     add_executable(${test}
-      "${ARG_TEST_SRC_DIR}/${test}.cpp"
-      "${ARG_TEST_SRC_DIR}/TestMain.cpp")
+      "${ARG_TEST_SRC_DIR}/${test}.cpp")
     target_include_directories(${test} PUBLIC ${ARG_LINK_DIRS})
     target_link_libraries(${test} PRIVATE
       ${ARG_LIBS}
-      CppUTest::CppUTest
-      CppUTest::CppUTestExt)
+      GTest::gtest_main)
     add_test(NAME ${test} COMMAND ${test})
+    gtest_discover_tests(${test})
   endforeach()
 endmacro(register_testcase)
 

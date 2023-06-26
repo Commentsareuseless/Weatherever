@@ -1,10 +1,9 @@
-#include <CppUTest/TestHarness.h>
+#include <gtest/gtest.h>
 
-TEST_GROUP(ExampleTestGroup)
-{
-};
-
-TEST(ExampleTestGroup, FirstTest)
-{
-   CHECK(true);
+// Demonstrate some basic assertions.
+TEST(ExampleTest, BasicExample) {
+  // Expect two strings not to be equal.
+  EXPECT_STRNE("hello", "world");
+  // Expect equality.
+  EXPECT_EQ(7 * 6, 42);
 }

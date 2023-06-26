@@ -20,7 +20,6 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(UpdateSubmodules)
 include(SmallHelpers)
 include(FetchContent)
-include(ARMToolchain)
 # ##############################################################################
 
 # ##############################################################################
@@ -57,7 +56,7 @@ message(STATUS "Using C++${CMAKE_CXX_STANDARD} standard")
 gen_gitignore(${CMAKE_BINARY_DIR}/../)
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
-  toolchainSetup()
+  set(CMAKE_TOOLCHAIN_FILE ARMToolchain)
 endif()
 
 # Check if project submodules are up to date

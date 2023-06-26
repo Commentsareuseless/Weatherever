@@ -29,19 +29,19 @@ macro(place_comp_cmds_in_src_dir)
 endmacro(place_comp_cmds_in_src_dir)
 
 macro(fetch_test_fm SHOULD_BUILD_UT)
-  if(${SHOULD_BUILD_TEST})
+  if(${SHOULD_BUILD_UT})
     message(STATUS "BUILD_TEST is ${BUILD_TEST}, UT will be built")
     include(CTest)
 
-    # CppUTest
-    set(TEST_FRAMEWORK_DIR ${CMAKE_SOURCE_DIR}/test/CppUTest)
+    # GTest
+    set(TEST_FRAMEWORK_DIR ${CMAKE_SOURCE_DIR}/test/)
 
     FetchContent_Declare(
-      CppUTest
-      GIT_REPOSITORY https://github.com/cpputest/cpputest.git
-      GIT_TAG        master
+      GoogleTest
+      GIT_REPOSITORY https://github.com/google/googletest.git
+      GIT_TAG        v1.13.0
     )
-    FetchContent_MakeAvailable(CppUTest)
+    FetchContent_MakeAvailable(GoogleTest)
 
     add_subdirectory(${CMAKE_SOURCE_DIR}/test)
   endif()
