@@ -14,6 +14,8 @@ cmake_minimum_required(VERSION 3.21)
 # Append path to cmake scripts directory
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 # ##############################################################################
 # Pre-project includes
 # ##############################################################################
@@ -56,7 +58,7 @@ message(STATUS "Using C++${CMAKE_CXX_STANDARD} standard")
 gen_gitignore(${CMAKE_BINARY_DIR}/../)
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
-  set(CMAKE_TOOLCHAIN_FILE ARMToolchain)
+  set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/cmake/ARMToolchain.cmake")
 endif()
 
 # Check if project submodules are up to date
@@ -68,9 +70,13 @@ update_submodules(${UPDATE_SUBMODULES})
 
 project(
   Weatherever
-  LANGUAGES C CXX
+  LANGUAGES C CXX ASM
   DESCRIPTION "Remote weather station with anemometer"
 )
+
+if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
+  add_subdirectory(${CMAKE_SOURCE_DIR}/setup/)
+endif()
 
 # Make sure, that after reconfiguring, we've got
 # fresh compile_commands.json in source directory

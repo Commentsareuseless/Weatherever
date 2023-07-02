@@ -1,6 +1,9 @@
 # CMake toolchain for ARM development
 # (Bare metal or RTOS configuration)
 
+set(CMAKE_SYSTEM_NAME Generic)
+set(CMAKE_SYSTEM_PROCESSOR ARM)
+
 # Make sure this script will work on Windows
 set(TOOLCHAIN_EXT ${CMAKE_EXECUTABLE_SUFFIX})
 
@@ -27,15 +30,11 @@ set(MCU_TYPE "-mcpu=cortex-m0plus")
 set(MCPU_FLAGS "-mthumb ${MCU_TYPE}")
 
 # Compiler and linker flags
-set(LDSCRIPT STM32G030C8Tx_FLASH.ld)
-set(LIBS -lc -lm -lnosys)
-set(LD_FLAGS ${MCU_TYPE} -specs=nano.specs -T${LDSCRIPT} ${LIBS} -Wl,-Map=${CMAKE_BINARY_DIR}/${PROJECT_NAME}.map,--cref -Wl,--gc-sections)
-set(CMAKE_COMMON_FLAGS -ffunction-sections -fdata-sections -fno-builtin -fno-common -Wall -Wshadow -Wdouble-promotion -Werror)
+# set(CMAKE_COMMON_FLAGS -ffunction-sections -fdata-sections -fno-builtin -fno-common -Wall -Wshadow -Wdouble-promotion)
 
-set(CMAKE_C_FLAGS ${MCPU_FLAGS} ${CMAKE_COMMON_FLAGS})
-set(CMAKE_CXX_FLAGS ${MCPU_FLAGS} ${CMAKE_COMMON_FLAGS})
-set(CMAKE_ASM_FLAGS ${MCPU_FLAGS} ${CMAKE_COMMON_FLAGS})
-set(CMAKE_EXE_LINKER_FLAGS ${LD_FLAGS},-print-memory-usage)
+set(CMAKE_C_FLAGS ${MCPU_FLAGS})# ${CMAKE_COMMON_FLAGS})
+set(CMAKE_CXX_FLAGS ${MCPU_FLAGS})# ${CMAKE_COMMON_FLAGS})
+set(CMAKE_ASM_FLAGS ${MCPU_FLAGS})# ${CMAKE_COMMON_FLAGS})
 
 set(CMAKE_C_FLAGS_DEBUG "-O0 -g -gdwarf-2")
 set(CMAKE_CXX_ASM_FLAGS_DEBUG "-O0 -g -gdwarf-2")

@@ -38,7 +38,7 @@ constexpr uint32_t CMD_NAME_MIN_SIZE{2};
 /**
  * @brief A container to hold callback to command and their
  *        unique identyfication number
- * 
+ *
  */
 struct Command {
   CommandID_t id;
@@ -73,7 +73,7 @@ private:
 /**
  * @brief Call command by supplying their name and optionally
  *        additional arguments
- * 
+ *
  * @param cmdName - Unique command name
  * @param cmdArgs - Arguments passed to command function
  * @return Execution status
@@ -81,16 +81,16 @@ private:
 int Call(const char* cmdName, const char* cmdArgs);
 
 /**
- * @brief Function tokenizes 
- * 
- * @param input 
+ * @brief Function tokenizes
+ *
+ * @param input
  */
 void HandleCliInput(const char* input);
 
 /**
  * @brief Registers putc-like function which handles
  *        printing singular characters to serial console
- * 
+ *
  * @param callback - callback to putc function
  */
 constexpr void RegisterStdoutHandler(ConsoleHandler callback);

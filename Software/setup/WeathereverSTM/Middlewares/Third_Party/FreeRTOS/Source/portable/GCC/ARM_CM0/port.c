@@ -557,4 +557,11 @@ __attribute__(( weak )) void vPortSetupTimerInterrupt( void )
 		}
 	}
 
+/* 	Call vTaskSwitchContext() from a function with the used attribute set
+    so that link time optimisation does not remove the symbol.*/
+static void __attribute__((used)) vPortNoOptimize()
+{
+	vTaskSwitchContext();
+}
+
 #endif /* configUSE_TICKLESS_IDLE */

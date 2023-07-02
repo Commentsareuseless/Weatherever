@@ -1,6 +1,5 @@
 #!/bin/bash
 (
-
 set -e   # Stop execution when error occurs
 
 BUILD_DIR='build'
@@ -9,7 +8,8 @@ BUILD_TARGET=$BUILD_DIR/target  # The Release and HW test config
 BUILD_TYPE_DBG="Debug"
 BUILD_TYPE_REL="Release"
 BUILD_TYPE_SEL="$BUILD_TYPE_DBG"
-BUILD_GENERATOR="Ninja"
+BUILD_GEN_PREFIX="MSYS"
+BUILD_GENERATOR="Makefiles"
 
 ################################################################################
 # Helper functions
@@ -20,7 +20,7 @@ only_build_project() {
 }
 
 build_and_cfg_project() {
-  cmake -G $BUILD_GENERATOR -B $BUILD_TARGET -S . -DCMAKE_BUILD_TYPE=$BUILD_TYPE_SEL -DUPDATE_SUBMODULES=ON -DBUILD_TEST=OFF
+  cmake -G "$BUILD_GEN_PREFIX $BUILD_GENERATOR" -B $BUILD_TARGET -S . -DCMAKE_BUILD_TYPE=$BUILD_TYPE_SEL -DUPDATE_SUBMODULES=ON -DBUILD_TEST=OFF
   only_build_project
 }
 
@@ -38,8 +38,11 @@ run_tests() {
 }
 
 cleanup() {
-  cmake --build $BUILD_NATIVE --target clean
-  cmake --build $BUILD_TARGET --target clean
+  if [ -d $BUILD_TARGET ]; then
+    cmake --build $BUILD_TARGET --target clean
+  elif [ -d $BUILD_NATIVE ]; then
+    cmake --build $BUILD_NATIVE --target clean
+  fi
 }
 
 ################################################################################
