@@ -7,6 +7,10 @@
 
 set(GENERATED_FILES_DIR "${CMAKE_CURRENT_LIST_DIR}/WeathereverSTM")
 
+# Remove auto generated FreeRTOS tasks and handlers, this is implemented
+# at project root
+file(REMOVE "${GENERATED_FILES_DIR}/Core/Src/freertos_app.c")
+
 # Sources in Core
 file(
   GLOB FILES_CORE
@@ -21,11 +25,13 @@ file(
 
 # Sources in Middleware
 file(
-  GLOB_RECURSE FILES_MIDDLEWARE
+  GLOB FILES_MIDDLEWARE
   LIST_DIRECTORIES FALSE
-  "${GENERATED_FILES_DIR}/Middlewares/Third_Party/FreeRTOS/Source/*.c")
+  "${GENERATED_FILES_DIR}/Middlewares/Third_Party/FreeRTOS/Source/*.c"
+  "${GENERATED_FILES_DIR}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/*.c"
+  "${GENERATED_FILES_DIR}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0/*.c")
 
-# set(CMAKE_EXECUTABLE_SUFFIX $<$<CONFIG:Release>:".elf">)
+# message(STATUS "Middleware files: ${FILES_MIDDLEWARE}")
 
 # Not actual executable, we want to generate .elf
 add_executable(${PROJECT_NAME}
@@ -39,7 +45,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   "${GENERATED_FILES_DIR}/Drivers/STM32G0xx_HAL_Driver/Inc"
   "${GENERATED_FILES_DIR}/Drivers/STM32G0xx_HAL_Driver/Inc/Legacy"
   "${GENERATED_FILES_DIR}/Middlewares/Third_Party/FreeRTOS/Source/include"
-  "${GENERATED_FILES_DIR}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2"
+  "${GENERATED_FILES_DIR}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS"
   "${GENERATED_FILES_DIR}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0"
   "${GENERATED_FILES_DIR}/Drivers/CMSIS/Device/ST/STM32G0xx/Include"
   "${GENERATED_FILES_DIR}/Drivers/CMSIS/Include")

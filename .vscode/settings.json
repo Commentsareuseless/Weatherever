@@ -1,6 +1,12 @@
 {
   "editor.tabSize": 2,
-  "cmake.configureOnOpen": false,
-  "cmake.automaticReconfigure": false,
-  "cmake.autoSelectActiveFolder": false
+  "clangd.arguments": [
+    "--clang-tidy",
+    "--clang-tidy-checks=*",
+    "--cross-file-rename",
+    "--background-index",
+    "--query-driver=C:\\msys64\\ucrt64\\**\\*",
+    "--completion-style=detailed",
+    "--header-insertion-decorators",
+  ],
 }

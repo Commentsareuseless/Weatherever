@@ -8,8 +8,8 @@ BUILD_TARGET=$BUILD_DIR/target  # The Release and HW test config
 BUILD_TYPE_DBG="Debug"
 BUILD_TYPE_REL="Release"
 BUILD_TYPE_SEL="$BUILD_TYPE_DBG"
-BUILD_GEN_PREFIX="MSYS"
-BUILD_GENERATOR="Makefiles"
+BUILD_GEN_POSTFIX=" Makefiles"
+BUILD_GENERATOR="MinGW"$BUILD_GEN_POSTFIX
 
 ################################################################################
 # Helper functions
@@ -20,7 +20,7 @@ only_build_project() {
 }
 
 build_and_cfg_project() {
-  cmake -G "$BUILD_GEN_PREFIX $BUILD_GENERATOR" -B $BUILD_TARGET -S . -DCMAKE_BUILD_TYPE=$BUILD_TYPE_SEL -DUPDATE_SUBMODULES=ON -DBUILD_TEST=OFF
+  cmake -G "$BUILD_GENERATOR" -B $BUILD_TARGET -S . -DCMAKE_BUILD_TYPE=$BUILD_TYPE_SEL -DUPDATE_SUBMODULES=ON -DBUILD_TEST=OFF
   only_build_project
 }
 
@@ -29,7 +29,7 @@ build_test() {
 }
 
 cfg_and_build_test() {
-  cmake -G $BUILD_GENERATOR -B $BUILD_NATIVE -S . -DCMAKE_BUILD_TYPE=$BUILD_TYPE_SEL -DUPDATE_SUBMODULES=ON -DBUILD_TEST=ON
+  cmake -G "$BUILD_GENERATOR" -B $BUILD_NATIVE -S . -DCMAKE_BUILD_TYPE=$BUILD_TYPE_SEL -DUPDATE_SUBMODULES=ON -DBUILD_TEST=ON
   build_test
 }
 

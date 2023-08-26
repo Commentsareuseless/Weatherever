@@ -6,3 +6,6 @@ Testing
 
 # Ignore cache from clangd
 .cache
+
+# Also, make sure to ignore build artifacts
+build/

@@ -1,8 +1,9 @@
----
-Checks: '*,-abseil*,-google*,-fuchsia*,-llvm-header-guard'
-WarningsAsErrors: '*'
-FormatStyle: file
+Checks: 'abseil-*, cert-*,cppcoreguidelines-* ,bugprone-*, google-*, performance-*, -google-readability-todo'
 CheckOptions:
-  - key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
-    value: '1'
-...
+    - key: bugprone-argument-comment.StrictMode
+      value: 1
+    - key: bugprone-exception-escape.FunctionsThatShouldNotThrow
+      value: WinMain,SDL_main
+    - key: google-readability-todo
+      value: false
+FormatStyle: 'file'
