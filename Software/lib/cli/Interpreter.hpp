@@ -21,7 +21,7 @@ namespace cli
 typedef uint32_t CommandID_t;
 
 /**
- * @brief All commands follow this signature
+ * @brief All commands follow this signature.
  *        Convention is, that CLI interpretter passes
  *        arguments to callback as string, and callback
  *        returns UNIX-like errors where:

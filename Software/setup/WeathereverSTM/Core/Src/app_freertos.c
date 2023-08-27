@@ -50,9 +50,6 @@
 osThreadId defaultTaskHandle;
 uint32_t defaultTaskBuffer[ 128 ];
 osStaticThreadDef_t defaultTaskControlBlock;
-osThreadId TaskDataGatHandle;
-uint32_t DataGatherTaskStack[ 128 ];
-osStaticThreadDef_t DataGatherControlBlock;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -60,7 +57,6 @@ osStaticThreadDef_t DataGatherControlBlock;
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void const * argument);
-void TaskDataGather(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -149,10 +145,6 @@ void MX_FREERTOS_Init(void) {
   osThreadStaticDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128, defaultTaskBuffer, &defaultTaskControlBlock);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
-  /* definition and creation of TaskDataGat */
-  osThreadStaticDef(TaskDataGat, TaskDataGather, osPriorityRealtime, 0, 128, DataGatherTaskStack, &DataGatherControlBlock);
-  TaskDataGatHandle = osThreadCreate(osThread(TaskDataGat), NULL);
-
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -172,21 +164,6 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for (;;) { osDelay(1); }
   /* USER CODE END StartDefaultTask */
-}
-
-/* USER CODE BEGIN Header_TaskDataGather */
-/**
-* @brief Function implementing the TaskDataGat thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_TaskDataGather */
-void TaskDataGather(void const * argument)
-{
-  /* USER CODE BEGIN TaskDataGather */
-  /* Infinite loop */
-  for (;;) { osDelay(1); }
-  /* USER CODE END TaskDataGather */
 }
 
 /* Private application code --------------------------------------------------*/
