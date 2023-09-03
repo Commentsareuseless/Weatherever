@@ -13,7 +13,7 @@ AccessModifierOffset: -2
 
 # If true, horizontally aligns arguments after an open bracket.
 # This applies to round brackets (parentheses), angle brackets and square brackets.
-AlignAfterOpenBracket: Align
+AlignAfterOpenBracket: AlwaysBreak
 # Align:
 # someLongFunction(argument1,
 #                  argument2);
@@ -30,7 +30,7 @@ AlignConsecutiveMacros: true
 
 
 # If true, aligns consecutive assignments.
-AlignConsecutiveAssignments: false
+AlignConsecutiveAssignments: true
 # true:
 # int aaaa = 12;
 # int b    = 23;

@@ -5,7 +5,7 @@
     "--clang-tidy-checks=*",
     "--cross-file-rename",
     "--background-index",
-    "--query-driver=C:\\msys64\\ucrt64\\**\\*",
+    "--query-driver=/usr/bin/arm-none-eabi-*",
     "--completion-style=detailed",
     "--header-insertion-decorators",
   ],

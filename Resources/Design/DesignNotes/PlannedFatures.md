@@ -4,12 +4,13 @@
 
 - [x] Connector for debugger/programmer.
 - [x] Two isolated power supplies
+- [ ] ADC and shunt resistor for anemometer to check for proper connection
 - [ ] Indicator LEDs for PS.
 - [x] "Error LED" - LED blinking error code in case of hard fault.
 - [x] USB debugging interface.
 - [x] Radio communication on 868Mhz band.
-- [ ] OLED display (not for current release).
-- [ ] 4 buttons to control display options (not for current release).
+- [ ] ~~OLED display (not for current release).~~
+- [ ] ~~4 buttons to control display options~~ (not for current release).
 - [x] RESET button.
 - [x] Switch to select between normal and debug modes(Optional, maybe we can check in SW if PC is connected through USB?).
 - [x] HW test points for osciloscope and multimeter (at least for all communication interfaces and anemometer signal)
@@ -29,3 +30,5 @@
 - [ ] Standard for UART communication with future expansion board.
 - [ ] Bootloader and SW update through RF(?)
 - [ ] PC (or Rpi) app to be "server" for main board and read their measurements through RF
+- [ ] Dev test (program logic tests, running on PC) setup
+- [ ] Integration tests (tests running on target, additional HW "testbed" may be required)

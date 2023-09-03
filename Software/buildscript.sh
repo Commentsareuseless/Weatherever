@@ -8,8 +8,8 @@ BUILD_TARGET=$BUILD_DIR/target  # The Release and HW test config
 BUILD_TYPE_DBG="Debug"
 BUILD_TYPE_REL="Release"
 BUILD_TYPE_SEL="$BUILD_TYPE_DBG"
-BUILD_GEN_POSTFIX=" Makefiles"
-BUILD_GENERATOR="MinGW"$BUILD_GEN_POSTFIX
+BUILD_GEN_POSTFIX= #" Makefiles"
+BUILD_GENERATOR="Ninja"$BUILD_GEN_POSTFIX
 
 ################################################################################
 # Helper functions

@@ -9,29 +9,28 @@
  * Copyright: Macieg :)
  *
  */
-#pragma once
-
 #include "Tasks.hpp"
 
+#include <algorithm>
 #include <array>
 #include <cstdint>
+#include <string_view>
 
 #include <FreeRTOS.h>
-#include <stdint.h>
 #include <task.h>
-#include <cmsis_os.h>
 #include <FreeRTOSConfig.h>
 
 constexpr uint32_t TASK_STACK_SIZE{configMINIMAL_STACK_SIZE};
 constexpr uint32_t TASK_NAME_MAX_SIZE{configMAX_TASK_NAME_LEN};
 
-using TaskNameBuffer = std::array<char*, TASK_NAME_MAX_SIZE>;
-using TaskPrioBuff = std::array<osPriority, ID_MAX_TASKS>;
-using StackBuffer = std::array<uint32_t, TASK_STACK_SIZE>;
+using TaskNameBuffer =
+    std::array<std::array<char, TASK_NAME_MAX_SIZE>, TASK_NAME_MAX_SIZE>;
+using TaskPrioBuff     = std::array<osPriority, ID_MAX_TASKS>;
+using StackBuffer      = std::array<uint32_t, TASK_STACK_SIZE>;
 using StackBuffStorage = std::array<StackBuffer, ID_MAX_TASKS>;
-using TaskHandleBuff = std::array<osThreadId, ID_MAX_TASKS>;
-using TcbBuffer = std::array<osStaticThreadDef_t, ID_MAX_TASKS>;
-using TaskDefBuff = std::array<osThreadDef_t, ID_MAX_TASKS>;
+using TaskHandleBuff   = std::array<osThreadId, ID_MAX_TASKS>;
+using TcbBuffer        = std::array<osStaticThreadDef_t, ID_MAX_TASKS>;
+using TaskDefBuff      = std::array<osThreadDef_t, ID_MAX_TASKS>;
 
 /**
  * @note This function makes data in returned array
@@ -41,9 +40,9 @@ using TaskDefBuff = std::array<osThreadDef_t, ID_MAX_TASKS>;
 static constexpr TaskNameBuffer fillTaskNames() {
   TaskNameBuffer taskNames{};
 
-  taskNames[ID_TASK_BACKGROUND] = "bkgd";
-  taskNames[ID_TASK_GATHER_DATA] = "gthd";
-  taskNames[ID_TASK_HANDLE_DBG] = "hdbg";
+  taskNames[ID_TASK_BACKGROUND]  = {"gthd"};
+  taskNames[ID_TASK_GATHER_DATA] = {"gthd"};
+  taskNames[ID_TASK_HANDLE_DBG]  = {"hdbg"};
 
   return taskNames;
 }
@@ -56,9 +55,9 @@ static constexpr TaskNameBuffer fillTaskNames() {
 static constexpr TaskPrioBuff fillTaskPrios() {
   TaskPrioBuff taskPriorities{};
 
-  taskPriorities[ID_TASK_BACKGROUND] = osPriorityLow;
+  taskPriorities[ID_TASK_BACKGROUND]  = osPriorityLow;
   taskPriorities[ID_TASK_GATHER_DATA] = osPriorityRealtime;
-  taskPriorities[ID_TASK_HANDLE_DBG] = osPriorityBelowNormal;
+  taskPriorities[ID_TASK_HANDLE_DBG]  = osPriorityBelowNormal;
 
   return taskPriorities;
 }
@@ -70,12 +69,18 @@ static StackBuffStorage TaskStackStorage{};
 static constexpr TaskNameBuffer TaskNames{fillTaskNames()};
 static constexpr TaskPrioBuff TaskInitialPriorities{fillTaskPrios()};
 
+static void veryLongFunctionNameWhichDoesNothing(
+    unsigned int argument_1,
+    unsigned int argument_2,
+    unsigned int argument_3,
+    unsigned int argument_4,
+    unsigned int argument_5);
 /**
  * @brief This array contains all available tasks
  *        Add new ThreadDefs here if neccessary
  */
 static constexpr TaskDefBuff TasksDb{
-    {{TaskNames[ID_TASK_BACKGROUND], TaskBackground,
+    {{TaskNames[ID_TASK_BACKGROUND].data(), TaskBackground,
       TaskInitialPriorities[ID_TASK_BACKGROUND], 1,
       TASK_STACK_SIZE * sizeof(uint32_t),
       TaskStackStorage[ID_TASK_BACKGROUND].data(),

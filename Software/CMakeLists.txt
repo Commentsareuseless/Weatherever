@@ -71,15 +71,16 @@ update_submodules(${UPDATE_SUBMODULES})
 project(
   Weatherever
   LANGUAGES C CXX ASM
-  DESCRIPTION "Remote weather station with anemometer"
-)
+  DESCRIPTION "Remote weather station with anemometer")
 
-if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
-  add_subdirectory(${CMAKE_SOURCE_DIR}/setup/)
-endif()
+set(GENERATED_FILES_DIR "${CMAKE_SOURCE_DIR}/setup/WeathereverSTM")
 
-# Make sure, that after reconfiguring, we've got
-# fresh compile_commands.json in source directory
+add_subdirectory(setup)
+add_subdirectory(core)
+add_subdirectory(rtos)
+
+# Make sure, that after reconfiguring, we've got fresh compile_commands.json in
+# source directory
 del_compile_commands(${CMAKE_SOURCE_DIR})
 
 # Setup unit testing if applicable

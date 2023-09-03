@@ -27,3 +27,4 @@ Components which will not cause HardFault, but their lack or malfuncion will be 
 ## Notes
 
 - After config generation remove freertos_app.c and create custom app at project core
+- Migrate project to FreeRTOS without CMSIS facade

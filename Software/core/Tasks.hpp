@@ -44,11 +44,3 @@ extern "C" void TaskGatherData(const void*);
  *        of application as a whole.
  */
 extern "C" void TaskHandleDebugCli(const void*);
-
-/**
- * @brief CubeMX init function.
- *        All tasks are created there so
- *        we have to live with it's non
- *        consistent (with rest of project) signature :)
- */
-extern "C" void MX_FREERTOS_Init(void);
