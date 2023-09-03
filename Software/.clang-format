@@ -13,7 +13,7 @@ AccessModifierOffset: -2
 
 # If true, horizontally aligns arguments after an open bracket.
 # This applies to round brackets (parentheses), angle brackets and square brackets.
-AlignAfterOpenBracket: AlwaysBreak
+AlignAfterOpenBracket: Align
 # Align:
 # someLongFunction(argument1,
 #                  argument2);

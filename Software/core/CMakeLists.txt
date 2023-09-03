@@ -9,9 +9,10 @@ set(COMMON_INCLUDES
     "${CMAKE_SOURCE_DIR}/include")
 
 # Sources in Core
-set(FILES_CORE "main.cpp" "SystemHooks.cpp")
-# file( GLOB FILES_CORE LIST_DIRECTORIES FALSE
-# "${CMAKE_CURRENT_LIST_DIR}/*")
+file(
+  GLOB FILES_CORE
+  LIST_DIRECTORIES FALSE
+  "${CMAKE_CURRENT_LIST_DIR}/*")
 
 # Not actual executable, we want to generate .elf
 add_executable(

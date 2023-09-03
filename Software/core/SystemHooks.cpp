@@ -15,9 +15,8 @@ extern "C" void vApplicationGetIdleTaskMemory(
     StackType_t** ppxIdleTaskStackBuffer,
     uint32_t* pulIdleTaskStackSize);
 
-extern "C" void vApplicationStackOverflowHook(
-    TaskHandle_t xTask,
-    char* pcTaskName);
+extern "C" void vApplicationStackOverflowHook(TaskHandle_t xTask,
+                                              char* pcTaskName);
 
 extern "C" void vApplicationIdleHook(void) {
   /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
@@ -31,9 +30,8 @@ extern "C" void vApplicationIdleHook(void) {
    memory allocated by the kernel to any task that has since been deleted. */
 }
 
-extern "C" void vApplicationStackOverflowHook(
-    TaskHandle_t xTask,
-    char* pcTaskName) {
+extern "C" void vApplicationStackOverflowHook(TaskHandle_t xTask,
+                                              char* pcTaskName) {
   /* Run time stack overflow checking is performed if
    configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2. This hook function is
    called if a stack overflow is detected. */
@@ -50,14 +48,12 @@ extern "C" void PostSleepProcessing(uint32_t ulExpectedIdleTime) {
 static StaticTask_t xIdleTaskTCBBuffer;
 static StackType_t xIdleStack[configMINIMAL_STACK_SIZE];
 
-void vApplicationGetIdleTaskMemory(
-    StaticTask_t** ppxIdleTaskTCBBuffer,
-    StackType_t** ppxIdleTaskStackBuffer,
-    uint32_t* pulIdleTaskStackSize) {
+void vApplicationGetIdleTaskMemory(StaticTask_t** ppxIdleTaskTCBBuffer,
+                                   StackType_t** ppxIdleTaskStackBuffer,
+                                   uint32_t* pulIdleTaskStackSize) {
   *ppxIdleTaskTCBBuffer   = &xIdleTaskTCBBuffer;
   *ppxIdleTaskStackBuffer = &xIdleStack[0];
   *pulIdleTaskStackSize   = configMINIMAL_STACK_SIZE;
-  /* place for user code */
 }
 
 /* 	Call vTaskSwitchContext() from a function with the used attribute set

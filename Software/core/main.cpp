@@ -23,6 +23,8 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
+#include "Tasks.hpp"
+
 #define __noreturn __attribute__((noreturn))
 
 extern "C" __noreturn void vAssertCalled(const char*, int);
@@ -43,9 +45,16 @@ int main() {
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
 
+  InitRtosTasks();
+
   vTaskStartScheduler();
 
-  while (1) { ; }
+  /* If all is well, the scheduler will now be running, and the following
+	line will never be reached.  If the following line does execute, then there
+	was	insufficient FreeRTOS heap memory available for the idle and/or timer
+	tasks to be created.  See the memory management section on the FreeRTOS web
+	site, or the FreeRTOS tutorial books for more details. */
+  for (;;) { ; }
 }
 
 void vAssertCalled(const char*, int) {
