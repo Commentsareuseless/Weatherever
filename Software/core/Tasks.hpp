@@ -39,13 +39,13 @@ enum TaskPriority : uint8_t
 /**
  * @brief This should be called before vTaskStartScheduler()
  *        so all tasks can be properly created and initialized
- * 
+ *
  */
 void InitRtosTasks(void);
 
 /**
  * @brief Get handle of specified task ID
- * 
+ *
  * @param taskId - Task ID
  */
 TaskHandle_t GetTask(TaskIDs taskId);

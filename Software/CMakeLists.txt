@@ -22,33 +22,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 include(UpdateSubmodules)
 include(SmallHelpers)
 include(FetchContent)
+include(ConfigVariables)
 # ##############################################################################
-
-# ##############################################################################
-# Add new options here
-# ##############################################################################
-option(UPDATE_SUBMODULES
-       "Check for submodules update before configuring project" OFF)
-
-# ##############################################################################
-
-# Project versioning
-set(PROJECT_VERSION_MAJOR 0)
-set(PROJECT_VERSION_MINOR 1)
-set(PROJECT_VERSION_PATCH 1)
-
-# C11 Support
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_EXTENSIONS OFF)
-
-# C++17 Support
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-# Export compile_commands.json for editors which use them
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Report used C and C++ standard
 message(STATUS "Using C${CMAKE_C_STANDARD} standard")
@@ -56,10 +31,6 @@ message(STATUS "Using C++${CMAKE_CXX_STANDARD} standard")
 
 # Make 10000% sure that git ignores binary directory
 gen_gitignore(${CMAKE_BINARY_DIR}/../)
-
-if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
-  set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/cmake/ARMToolchain.cmake")
-endif()
 
 # Check if project submodules are up to date
 update_submodules(${UPDATE_SUBMODULES})
@@ -73,11 +44,12 @@ project(
   LANGUAGES C CXX ASM
   DESCRIPTION "Remote weather station with anemometer")
 
-set(GENERATED_FILES_DIR "${CMAKE_SOURCE_DIR}/setup/WeathereverSTM")
-
+# Project modules
+add_subdirectory(ext/etl)
 add_subdirectory(setup)
-add_subdirectory(core)
+add_subdirectory(include)
 add_subdirectory(rtos)
+add_subdirectory(core)
 
 # Make sure, that after reconfiguring, we've got fresh compile_commands.json in
 # source directory

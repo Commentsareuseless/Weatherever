@@ -13,7 +13,6 @@
 
 #include <array>
 #include <cstddef>
-#include <cstdint>
 
 constexpr uint32_t TASK_STACK_SIZE{configMINIMAL_STACK_SIZE};
 constexpr uint32_t TASK_NAME_MAX_SIZE{configMAX_TASK_NAME_LEN};

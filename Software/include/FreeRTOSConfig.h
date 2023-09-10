@@ -23,7 +23,6 @@ extern void vAssertCalled(const char*, int);
 #define configMAX_PRIORITIES                    (7)
 #define configMINIMAL_STACK_SIZE                ((uint16_t)0x80)
 #define configMAX_TASK_NAME_LEN                 (4)
-#define configUSE_16_BIT_TICKS                  0
 #define configTICK_TYPE_WIDTH_IN_BITS           TICK_TYPE_WIDTH_32_BITS
 #define configIDLE_SHOULD_YIELD                 0
 #define configUSE_TASK_NOTIFICATIONS            1
