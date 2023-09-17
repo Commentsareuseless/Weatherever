@@ -44,12 +44,18 @@ project(
   LANGUAGES C CXX ASM
   DESCRIPTION "Remote weather station with anemometer")
 
-# Project modules
 add_subdirectory(ext/etl)
-add_subdirectory(setup)
-add_subdirectory(include)
-add_subdirectory(rtos)
-add_subdirectory(core)
+
+if(NOT ${BUILD_TEST})
+  # Project modules
+  add_subdirectory(setup)
+  add_subdirectory(include)
+  add_subdirectory(rtos)
+  add_subdirectory(core)
+  add_subdirectory(drv)
+else()
+  add_subdirectory(ext/fff)
+endif()
 
 # Make sure, that after reconfiguring, we've got fresh compile_commands.json in
 # source directory

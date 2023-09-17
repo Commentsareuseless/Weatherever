@@ -1,0 +1,18 @@
+-- TARGET_PLATFORM not defined, using default value: stm32g0xx
+-- Using C11 standard
+-- Using C++17 standard
+-- Found git, submodule update possible
+-- etl | Version string determined with git describe: 20.38.0-12-g89306df9
+-- etl | Determined ETL version 20.38.0 from the git tag
+-- BUILD_TEST is ON, UT will be built
+-- Configuring done (2.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: D:/ElektronicznyDeVeLoPiNg/Weatherever/Weatherever/Software/build/native
+[1/8] Generating D:/ElektronicznyDeVeLoPiNg/Weatherever/Weatherever/Software/compile_commands.json
+[2/8] Linking CXX static library test\TestAppCore\libapp_entry.a
+[3/8] Linking CXX static library lib\libgtest.a
+[4/8] Linking CXX static library lib\libgtest_main.a
+[5/8] Linking CXX static library lib\libgmock.a
+[6/8] Linking CXX static library lib\libgmock_main.a
+[7/8] Linking CXX executable bin\TestExample.exe
+[8/8] Linking CXX executable bin\TestAppRoot.exe

@@ -9,16 +9,7 @@
  */
 #include <cstdio>
 
-#include <main.h>
-
-#include <crc.h>
-#include <dma.h>
-#include <gpio.h>
-#include <i2c.h>
-#include <rtc.h>
-#include <spi.h>
-#include <tim.h>
-#include <usart.h>
+#include <drv/CortexM0Plus.hpp>
 
 #include <FreeRTOS.h>
 #include <task.h>
@@ -28,24 +19,13 @@
 #define __noreturn __attribute__((noreturn))
 
 extern "C" __noreturn void vAssertCalled(const char*, int);
-extern "C" void SystemClock_Config(void);
 
 int main() {
-  HAL_Init();
-  SystemClock_Config();
 
-  MX_CRC_Init();
-  MX_DMA_Init();
-  MX_GPIO_Init();
-  MX_I2C1_Init();
-  MX_I2C2_Init();
-  MX_RTC_Init();
-  MX_SPI1_Init();
-  MX_TIM16_Init();
-  MX_USART1_UART_Init();
-  MX_USART2_UART_Init();
+  drv::CortexM0Plus::InitHalSystem();
+  drv::CortexM0Plus::InitPeripherals();
 
-  InitRtosTasks();
+  task::InitRtosTasks();
 
   vTaskStartScheduler();
 

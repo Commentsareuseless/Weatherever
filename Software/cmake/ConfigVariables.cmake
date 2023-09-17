@@ -24,7 +24,7 @@ set(TARGET_DESKTOP "native-test")
 if(NOT DEFINED TARGET_PLATFORM)
   set(TARGET_PLATFORM ${TARGET_STM32G0})
   message(
-    WARNING
+    STATUS
       "TARGET_PLATFORM not defined, using default value: ${TARGET_PLATFORM}")
 endif()
 
@@ -41,7 +41,9 @@ endif()
 set(TOOLCHAIN_FILE_DIR "${CMAKE_SOURCE_DIR}/cmake/ARMToolchain.cmake")
 
 # Toolchain is used only during cross compilation
-set(CMAKE_TOOLCHAIN_FILE ${TOOLCHAIN_FILE_DIR})
+if(NOT ${BUILD_TEST})
+  set(CMAKE_TOOLCHAIN_FILE ${TOOLCHAIN_FILE_DIR})
+endif()
 
 # Path to files generated with project configurator (CubeMX)
 set(GENERATED_FILES_DIR "${CMAKE_SOURCE_DIR}/setup/WeathereverSTM")
@@ -93,3 +95,5 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # ##############################################################################
 option(UPDATE_SUBMODULES
        "Check for submodules update before configuring project" OFF)
+# Don't build unit tests by default
+option(BUILD_TEST "Build unit test instead of cross compiling project" OFF)

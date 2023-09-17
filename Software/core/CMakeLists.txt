@@ -1,13 +1,5 @@
 include(AddStaticLib)
 
-set(COMMON_INCLUDES
-    "${GENERATED_FILES_DIR}/Core/Inc"
-    "${GENERATED_FILES_DIR}/Drivers/STM32G0xx_HAL_Driver/Inc"
-    "${GENERATED_FILES_DIR}/Drivers/STM32G0xx_HAL_Driver/Inc/Legacy"
-    "${GENERATED_FILES_DIR}/Drivers/CMSIS/Device/ST/STM32G0xx/Include"
-    "${GENERATED_FILES_DIR}/Drivers/CMSIS/Include"
-    "${CMAKE_SOURCE_DIR}/include")
-
 # Sources in Core
 file(
   GLOB FILES_CORE
@@ -15,15 +7,10 @@ file(
   "${CMAKE_CURRENT_LIST_DIR}/*")
 
 # Not actual executable, we want to generate .elf
-add_executable(
-  ${PROJECT_NAME} ${GENERATED_FILES_DIR}/startup_stm32g030xx.s ${FILES_CORE}
-                  ${FILES_DRIVERS} ${FILES_MIDDLEWARE})
+add_executable(${PROJECT_NAME} ${GENERATED_FILES_DIR}/startup_stm32g030xx.s
+                               ${FILES_CORE})
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${COMMON_INCLUDES})
-
-target_compile_definitions(
-  ${PROJECT_NAME} PRIVATE CMSIS_device_header="<stm32g0xx.h>" USE_HAL_DRIVER
-                          STM32G030xx STM32G030xx)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR})
 
 set(LDSCRIPT "${GENERATED_FILES_DIR}/STM32G030C8Tx_FLASH.ld")
 target_link_options(
@@ -43,7 +30,7 @@ target_compile_options(
   ${PROJECT_NAME} PRIVATE -Wall -fdata-sections -ffunction-sections
                           -fno-exceptions)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE rtos setup)
+target_link_libraries(${PROJECT_NAME} PRIVATE rtos drv::peripherals etl::etl)
 
 # Print size of generated file
 add_custom_command(

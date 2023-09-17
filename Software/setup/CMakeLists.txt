@@ -20,11 +20,11 @@ add_library(${SETUP_LIB_NAME} ${GENERATED_FILES_DIR}/startup_stm32g030xx.s
 
 target_include_directories(
   ${SETUP_LIB_NAME}
-  PRIVATE "${GENERATED_FILES_DIR}/Core/Inc"
-          "${GENERATED_FILES_DIR}/Drivers/STM32G0xx_HAL_Driver/Inc"
-          "${GENERATED_FILES_DIR}/Drivers/STM32G0xx_HAL_Driver/Inc/Legacy"
-          "${GENERATED_FILES_DIR}/Drivers/CMSIS/Device/ST/STM32G0xx/Include"
-          "${GENERATED_FILES_DIR}/Drivers/CMSIS/Include")
+  PUBLIC "${GENERATED_FILES_DIR}/Core/Inc"
+         "${GENERATED_FILES_DIR}/Drivers/STM32G0xx_HAL_Driver/Inc"
+         "${GENERATED_FILES_DIR}/Drivers/STM32G0xx_HAL_Driver/Inc/Legacy"
+         "${GENERATED_FILES_DIR}/Drivers/CMSIS/Device/ST/STM32G0xx/Include"
+         "${GENERATED_FILES_DIR}/Drivers/CMSIS/Include")
 
 target_compile_definitions(
   ${SETUP_LIB_NAME} PRIVATE "CMSIS_device_header=<stm32g0xx.h>"
