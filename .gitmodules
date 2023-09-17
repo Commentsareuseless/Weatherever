@@ -1,3 +1,6 @@
 [submodule "Software/ext/etl"]
 	path = Software/ext/etl
 	url = https://github.com/ETLCPP/etl.git
+[submodule "Software/ext/fff"]
+	path = Software/ext/fff
+	url = https://github.com/meekrosoft/fff.git
