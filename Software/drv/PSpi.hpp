@@ -24,5 +24,8 @@ public:
   bool TriggerRecv();
   CommStatus GetRecvStatus();
   CommStatus GetSendStatus();
+
+private:
+  // CS GPIO define
 };
 } // namespace drv

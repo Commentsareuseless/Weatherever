@@ -11,12 +11,13 @@
 #include "PSpi.hpp"
 
 #include <main.h>
+#include <spi.h>
 #include <stm32g0xx_hal_spi.h>
 
 namespace drv
 {
 
-void Spi::Init() {}
+void Spi::Init() { MX_SPI1_Init(); }
 
 bool Spi::TriggerSend() { return false; }
 

@@ -22,7 +22,7 @@ target_link_libraries(app_entry PRIVATE etl::etl mock::freertos_api)
 set(TEST_SOURCES "TestAppRoot")
 
 # Specify libraries to link with test
-set(TEST_LIBS mock::freertos_api app_entry)
+set(TEST_LIBS mock::freertos_api app_entry etl::etl)
 
 # Specify include directories
 set(TEST_DIRS ${CORE_DIR} ${CORE_INCLUDES} ${CMAKE_SOURCE_DIR}/test)

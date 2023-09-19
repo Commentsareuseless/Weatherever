@@ -14,6 +14,7 @@
 #include <etl/algorithm.h>
 #include <etl/array.h>
 #include <etl/circular_buffer.h>
+#include <stdint.h>
 
 namespace drv
 {
@@ -29,78 +30,28 @@ public:
     FAILED   /* Error during transmission/reception */
   };
 
-  bool ReadByte(uint8_t& recvByte) {
-    bool retval{false};
+  bool ReadByte(uint8_t& recvByte) { return (popFromRx(&recvByte, 1) == 1); }
 
-    if (!recvBuff.empty()) {
-      recvByte = recvBuff.front();
-      recvBuff.pop();
-      retval = true;
-    }
-
-    return retval;
-  }
-
-  bool ReadDataBatch(uint8_t* data, uint32_t dataSize) {
-    bool retval{false};
-    const auto maxRead{etl::min(recvBuff.size(), dataSize)};
-
-    if ((!recvBuff.empty()) && (nullptr != data)) {
-      for (uint32_t idx{0}; idx < maxRead; ++idx) {
-        data[idx] = recvBuff.front();
-        recvBuff.pop();
-      }
-      retval = true;
-    }
-
-    return retval;
+  uint32_t ReadDataBatch(uint8_t* data, uint32_t dataSize) {
+    return popFromRx(data, dataSize);
   }
 
   template <uint32_t dataSize>
-  bool ReadDataBatch(etl::array<uint8_t, dataSize>& data) {
-    bool retval{false};
-    constexpr auto maxRead{etl::min(recvBuff.size(), dataSize)};
-
-    if (!recvBuff.empty()) {
-      for (uint32_t idx{0}; idx < maxRead; ++idx) {
-        data[idx] = recvBuff.front();
-        recvBuff.pop();
-      }
-      retval = true;
-    }
-
-    return retval;
+  uint32_t ReadDataBatch(etl::array<uint8_t, dataSize>& data) {
+    return popFromRx(data.data(), data.size());
   }
 
   bool SendByte(const uint8_t byteToSend) {
-    // We don't care if the oldest val will be overriten
-    // so, no additional checks are required;
-    sendBuff.push(byteToSend);
-
-    return true;
+    return (pushToTx(&byteToSend, 1) == 1);
   }
 
-  bool SendDataBatch(const uint8_t* const data, uint32_t dataSize) {
-    bool retval{false};
-    // Trying to send more than buffer cappacity makes no sense
-    const uint32_t maxWrite{etl::min(dataSize, sendBuff.max_size())};
-
-    for (uint32_t idx{0}; idx < maxWrite; ++idx) { sendBuff.push(data[idx]); }
-
-    return retval;
+  uint32_t SendDataBatch(const uint8_t* const data, uint32_t dataSize) {
+    return pushToTx(data, dataSize);
   }
 
   template <uint32_t dataSize>
-  bool SendDataBatch(const etl::array<uint8_t, dataSize>& data) {
-    bool retval{false};
-    // Trying to send more than buffer cappacity makes no sense
-    constexpr uint32_t maxWrite{etl::min(data.size(), sendBuff.max_size())};
-
-    for (uint32_t idx{0}; idx < maxWrite; ++idx) {
-      sendBuff.push(data.at(idx));
-    }
-
-    return retval;
+  uint32_t SendDataBatch(const etl::array<uint8_t, dataSize>& data) {
+    return pushToTx(data.data(), data.size());
   }
 
   constexpr decltype(RxBuffSize) rxSize() { return recvBuff.size(); }
@@ -110,7 +61,64 @@ public:
   constexpr decltype(TxBuffSize) txCappacity() { return sendBuff.capacity(); }
   constexpr bool hasDataToSend() { return !sendBuff.empty(); }
 
+protected:
+  uint32_t pushToRx(const uint8_t* dataBuff, uint32_t dataSize) {
+    return pushToBuff(recvBuff, dataBuff, dataSize);
+  }
+
+  uint32_t popFromRx(uint8_t* dataBuff, uint32_t dataSize) {
+    return popFromBuff(recvBuff, dataBuff, dataSize);
+  }
+
+  uint32_t pushToTx(const uint8_t* dataBuff, uint32_t dataSize) {
+    return pushToBuff(sendBuff, dataBuff, dataSize);
+  }
+
+  uint32_t popFromTx(uint8_t* dataBuff, uint32_t dataSize) {
+    return popFromBuff(sendBuff, dataBuff, dataSize);
+  }
+
+  void* getInternalHandle() { return ifHandle; }
+
 private:
+  template <typename DataType, uint32_t buffSize>
+  using GenericBuff = etl::circular_buffer<DataType, buffSize>;
+  using RxBuff_t    = GenericBuff<uint8_t, RxBuffSize>;
+  using TxBuff_t    = GenericBuff<uint8_t, TxBuffSize>;
+
+  template <typename DataType, uint32_t buffSize>
+  constexpr static uint32_t popFromBuff(GenericBuff<DataType, buffSize>& buff,
+                                        uint8_t* dataBuff,
+                                        uint32_t dataSize) {
+    uint32_t retval{0u};
+    const auto maxRead{etl::min(buff.size(), dataSize)};
+
+    for (uint32_t idx{0}; idx < maxRead; ++idx) {
+      dataBuff[idx] = buff.front();
+      buff.pop();
+      ++retval;
+    }
+
+    return retval;
+  }
+
+  template <typename DataType, uint32_t buffSize>
+  constexpr static uint32_t pushToBuff(GenericBuff<DataType, buffSize>& buff,
+                                       uint8_t* dataBuff,
+                                       uint32_t dataSize) {
+    uint32_t retval{0u};
+    // Allow overriding data but
+    // trying to write more than buffer cappacity makes no sense
+    const uint32_t maxWrite{etl::min(dataSize, buff.max_size())};
+
+    for (uint32_t idx{0}; idx < maxWrite; ++idx) {
+      buff.push(dataBuff[idx]);
+      ++retval;
+    }
+
+    return retval;
+  }
+
   /**
      * @note This handle is void* bcs we want to
      *       eliminate all dependencies on generated drivers
@@ -122,13 +130,13 @@ private:
    *        Read*() functions read from here, actual transmission
    *        is handled by DMA
    */
-  etl::circular_buffer<uint8_t, RxBuffSize> recvBuff;
+  RxBuff_t recvBuff;
 
   /**
    * @brief All messages to transmit are written here
    *        Send*() functions write here, actual transmission
    *        is handled by DMA
    */
-  etl::circular_buffer<uint8_t, TxBuffSize> sendBuff;
+  TxBuff_t sendBuff;
 };
 } // namespace drv

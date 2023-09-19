@@ -20,7 +20,7 @@ class Usart :
     public CommHandler<USART_MAX_RECV_BUFF_SIZE, USART_MAX_SEND_BUFF_SIZE>
 {
 public:
-  void Init();
+  void Init(void* internalHandle);
   bool TriggerSend();
   bool TriggerRecv();
   CommStatus GetRecvStatus();

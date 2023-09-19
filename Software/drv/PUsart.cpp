@@ -10,12 +10,13 @@
 #include "PUsart.hpp"
 
 #include <main.h>
+#include <usart.h>
 #include <stm32g0xx_hal_uart.h>
 
 namespace drv
 {
 
-void Usart::Init() {}
+void Usart::Init(void* internalHandle) {}
 
 bool Usart::TriggerSend() { return false; }
 

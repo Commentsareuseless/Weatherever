@@ -1,5 +1,4 @@
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <mocks/MockFreeRTOS.hpp>

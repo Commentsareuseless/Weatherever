@@ -5,6 +5,7 @@
 - [x] Connector for debugger/programmer.
 - [x] Two isolated power supplies
 - [ ] ADC and shunt resistor for anemometer to check for proper connection
+- [ ] Add barometer DPS310
 - [ ] Indicator LEDs for PS.
 - [x] "Error LED" - LED blinking error code in case of hard fault.
 - [x] USB debugging interface.

@@ -11,6 +11,7 @@
 
 #include "PUsart.hpp"
 #include "PSpi.hpp"
+#include "PI2C.hpp"
 
 namespace drv
 {
@@ -25,6 +26,9 @@ public:
   Usart UASRT2;
 
   Spi SPI1;
+
+  I2C I2C1;
+  I2C I2C2;
 };
 
 } // namespace drv

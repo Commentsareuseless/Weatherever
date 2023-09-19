@@ -11,6 +11,7 @@
 #include "PI2C.hpp"
 
 #include <main.h>
+#include <i2c.h>
 #include <stm32g0xx_hal_i2c.h>
 
 namespace drv
