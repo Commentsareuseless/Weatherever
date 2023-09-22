@@ -9,6 +9,7 @@
  */
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 
 #include <etl/algorithm.h>
@@ -18,8 +19,9 @@
 
 namespace drv
 {
+using SizeType = size_t;
 
-template <uint32_t RxBuffSize, uint32_t TxBuffSize>
+template <SizeType RxBuffSize, SizeType TxBuffSize>
 class CommHandler
 {
 public:
@@ -32,12 +34,12 @@ public:
 
   bool ReadByte(uint8_t& recvByte) { return (popFromRx(&recvByte, 1) == 1); }
 
-  uint32_t ReadDataBatch(uint8_t* data, uint32_t dataSize) {
+  SizeType ReadDataBatch(uint8_t* data, SizeType dataSize) {
     return popFromRx(data, dataSize);
   }
 
-  template <uint32_t dataSize>
-  uint32_t ReadDataBatch(etl::array<uint8_t, dataSize>& data) {
+  template <SizeType dataSize>
+  SizeType ReadDataBatch(etl::array<uint8_t, dataSize>& data) {
     return popFromRx(data.data(), data.size());
   }
 
@@ -45,12 +47,12 @@ public:
     return (pushToTx(&byteToSend, 1) == 1);
   }
 
-  uint32_t SendDataBatch(const uint8_t* const data, uint32_t dataSize) {
+  SizeType SendDataBatch(const uint8_t* const data, SizeType dataSize) {
     return pushToTx(data, dataSize);
   }
 
-  template <uint32_t dataSize>
-  uint32_t SendDataBatch(const etl::array<uint8_t, dataSize>& data) {
+  template <SizeType dataSize>
+  SizeType SendDataBatch(const etl::array<uint8_t, dataSize>& data) {
     return pushToTx(data.data(), data.size());
   }
 
@@ -60,40 +62,42 @@ public:
   constexpr decltype(TxBuffSize) txSize() { return sendBuff.size(); }
   constexpr decltype(TxBuffSize) txCappacity() { return sendBuff.capacity(); }
   constexpr bool hasDataToSend() { return !sendBuff.empty(); }
+  constexpr void flushRx() { clearBuff(recvBuff); }
+  constexpr void flushTx() { clearBuff(sendBuff); }
 
 protected:
-  uint32_t pushToRx(const uint8_t* dataBuff, uint32_t dataSize) {
+  SizeType pushToRx(const uint8_t* dataBuff, SizeType dataSize) {
     return pushToBuff(recvBuff, dataBuff, dataSize);
   }
 
-  uint32_t popFromRx(uint8_t* dataBuff, uint32_t dataSize) {
+  SizeType popFromRx(uint8_t* dataBuff, SizeType dataSize) {
     return popFromBuff(recvBuff, dataBuff, dataSize);
   }
 
-  uint32_t pushToTx(const uint8_t* dataBuff, uint32_t dataSize) {
+  SizeType pushToTx(const uint8_t* dataBuff, SizeType dataSize) {
     return pushToBuff(sendBuff, dataBuff, dataSize);
   }
 
-  uint32_t popFromTx(uint8_t* dataBuff, uint32_t dataSize) {
+  SizeType popFromTx(uint8_t* dataBuff, SizeType dataSize) {
     return popFromBuff(sendBuff, dataBuff, dataSize);
   }
 
   void* getInternalHandle() { return ifHandle; }
 
 private:
-  template <typename DataType, uint32_t buffSize>
+  template <typename DataType, SizeType buffSize>
   using GenericBuff = etl::circular_buffer<DataType, buffSize>;
   using RxBuff_t    = GenericBuff<uint8_t, RxBuffSize>;
   using TxBuff_t    = GenericBuff<uint8_t, TxBuffSize>;
 
-  template <typename DataType, uint32_t buffSize>
-  constexpr static uint32_t popFromBuff(GenericBuff<DataType, buffSize>& buff,
+  template <typename DataType, SizeType buffSize>
+  constexpr static SizeType popFromBuff(GenericBuff<DataType, buffSize>& buff,
                                         uint8_t* dataBuff,
-                                        uint32_t dataSize) {
-    uint32_t retval{0u};
+                                        SizeType dataSize) {
+    SizeType retval{0u};
     const auto maxRead{etl::min(buff.size(), dataSize)};
 
-    for (uint32_t idx{0}; idx < maxRead; ++idx) {
+    for (SizeType idx{0}; idx < maxRead; ++idx) {
       dataBuff[idx] = buff.front();
       buff.pop();
       ++retval;
@@ -102,21 +106,27 @@ private:
     return retval;
   }
 
-  template <typename DataType, uint32_t buffSize>
-  constexpr static uint32_t pushToBuff(GenericBuff<DataType, buffSize>& buff,
+  template <typename DataType, SizeType buffSize>
+  constexpr static SizeType pushToBuff(GenericBuff<DataType, buffSize>& buff,
                                        uint8_t* dataBuff,
-                                       uint32_t dataSize) {
-    uint32_t retval{0u};
+                                       SizeType dataSize) {
+    SizeType retval{0u};
     // Allow overriding data but
     // trying to write more than buffer cappacity makes no sense
-    const uint32_t maxWrite{etl::min(dataSize, buff.max_size())};
+    const SizeType maxWrite{etl::min(dataSize, buff.max_size())};
 
-    for (uint32_t idx{0}; idx < maxWrite; ++idx) {
+    for (SizeType idx{0}; idx < maxWrite; ++idx) {
       buff.push(dataBuff[idx]);
       ++retval;
     }
 
     return retval;
+  }
+
+  template <typename DataType, SizeType buffSize>
+  constexpr static void clearBuff(GenericBuff<DataType, buffSize>& buff) {
+    buff.clear();
+    buff.fill(0x00);
   }
 
   /**
