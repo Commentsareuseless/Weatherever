@@ -67,7 +67,7 @@ elif [ $1 == "ncfg" ]; then
   only_build_project
 
 elif [ $1 == "test-cfg" ]; then
-  BUILD_TYPE_SEL=$BUILD_TYPE_DBG
+  BUILD_TYPE_SEL=$BUILD_TYPE_REL
   cfg_and_build_test
 
 elif [ $1 == "test-run" ]; then

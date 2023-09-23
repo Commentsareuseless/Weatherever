@@ -66,7 +66,7 @@ public:
   constexpr void flushTx() { clearBuff(sendBuff); }
 
 protected:
-  SizeType pushToRx(const uint8_t* dataBuff, SizeType dataSize) {
+  SizeType pushToRx(const uint8_t* const dataBuff, SizeType dataSize) {
     return pushToBuff(recvBuff, dataBuff, dataSize);
   }
 
@@ -74,7 +74,7 @@ protected:
     return popFromBuff(recvBuff, dataBuff, dataSize);
   }
 
-  SizeType pushToTx(const uint8_t* dataBuff, SizeType dataSize) {
+  SizeType pushToTx(const uint8_t* const dataBuff, SizeType dataSize) {
     return pushToBuff(sendBuff, dataBuff, dataSize);
   }
 
@@ -108,7 +108,7 @@ private:
 
   template <typename DataType, SizeType buffSize>
   constexpr static SizeType pushToBuff(GenericBuff<DataType, buffSize>& buff,
-                                       uint8_t* dataBuff,
+                                       const uint8_t* const dataBuff,
                                        SizeType dataSize) {
     SizeType retval{0u};
     // Allow overriding data but
