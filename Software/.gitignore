@@ -9,3 +9,6 @@ Testing
 
 # Also, make sure to ignore build artifacts
 build/
+
+# Kicad backups
+*/*-backups/
