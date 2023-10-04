@@ -1,0 +1,5 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "Nowy folder")(type "KiCad")(uri "${KIPRJMOD}/Nowy folder.pretty")(options "")(descr ""))
+  (lib (name "Weatherever_board_rev1")(type "KiCad")(uri "D:/ElektronicznyDeVeLoPiNg/Weatherever/Weatherever/Hardware/Weatherever_board_rev1.pretty")(options "")(descr ""))
+)
