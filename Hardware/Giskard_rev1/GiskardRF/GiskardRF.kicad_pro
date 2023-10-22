@@ -504,6 +504,10 @@
     [
       "8fd00ce6-e42b-4a19-b38f-9da42c67667c",
       "RadioComm1"
+    ],
+    [
+      "e974328c-811c-4ed4-a726-e121a6085980",
+      "ExpansionConnector"
     ]
   ],
   "text_variables": {}

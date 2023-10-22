@@ -861,7 +861,7 @@
     (property "Value" "SMA6252A23G50" (at 200.0251 92.3103 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Connector_Coaxial:SMA_Amphenol_901-143_Horizontal" (at 197.485 90.805 0)
+    (property "Footprint" "Connector_Coaxial:SMA_Samtec_SMA-J-P-X-ST-EM1_EdgeMount" (at 197.485 90.805 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" " ~" (at 197.485 90.805 0)
