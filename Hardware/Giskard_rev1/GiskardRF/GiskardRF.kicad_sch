@@ -3484,7 +3484,7 @@
     (uuid 065ec9b9-7a17-456e-bc7e-75292a30434f)
   )
   (text "The _S suffix is\nfor \"Safe\" \n(from ESD threats :))"
-    (at 82.55 0.635 0)
+    (at 75.565 22.225 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 20149509-6364-45fd-844e-61554aeff8c0)
   )
@@ -6142,7 +6142,7 @@
     (property "Reference" "D101" (at 211.201 48.3778 90)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Value" "ERR_LED (RED)" (at 205.105 42.545 0)
+    (property "Value" "ERR_LED" (at 205.105 42.545 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Footprint" "Diode_SMD:D_0805_2012Metric_Pad1.15x1.40mm_HandSolder" (at 208.28 47.625 0)
